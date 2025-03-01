@@ -5,6 +5,7 @@ import { CiSearch } from "react-icons/ci";
 import { IFilterKeys } from "../utils/interface";
 import { Link } from "react-router-dom";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { GLOBAL } from "../constants/global";
 
 interface DataTableProps<T> {
   columns: { header: string; accessor: keyof T }[];
@@ -51,7 +52,7 @@ function DataTable<T extends { [key: string]: any }>({
     if (searchValue && !searchValue.includes("Select ")) {
       let value = "";
 
-      if (selectedType === "date" && searchValue) {
+      if (selectedType === GLOBAL.DATE && searchValue) {
         const date = new Date(searchValue);
         value = `${date.getFullYear()}-${
           date.getMonth() + 1
@@ -64,11 +65,12 @@ function DataTable<T extends { [key: string]: any }>({
         value = "";
       }
 
-      if (dataType === "users") {
+      if (dataType === GLOBAL.USERS) {
         url = `${fetchUrl}/filter?key=${selectedKey}&value=${value}`;
       } else {
-        if (selectedKey === "category") {
-          url = value === "All" ? fetchUrl : `${fetchUrl}/category/laptops`;
+        if (selectedKey === GLOBAL.CATEGORY) {
+          url =
+            value === GLOBAL.ALL ? fetchUrl : `${fetchUrl}/category/laptops`;
         } else {
           url = `${fetchUrl}/search?q=${value}`;
         }
@@ -90,10 +92,9 @@ function DataTable<T extends { [key: string]: any }>({
         if (
           selectedFilter?.key &&
           searchRef?.current?.value &&
-          dataType === "products" &&
-          selectedFilter?.key !== "category"
+          dataType === GLOBAL.PRODUCT &&
+          selectedFilter?.key !== GLOBAL.CATEGORY
         ) {
-          console.log("response", response.data[dataType]);
           const filteredProducts = response.data[dataType]
             .map((item: Record<string, any>) => {
               if (
@@ -103,6 +104,7 @@ function DataTable<T extends { [key: string]: any }>({
               ) {
                 return item;
               }
+              return undefined;
             })
             .filter(
               (
@@ -253,37 +255,35 @@ function DataTable<T extends { [key: string]: any }>({
 
   // Header section
   const renderHeader = () => {
+    const buttons = [
+      { title: "Users", path: "/users", notActive: false },
+      { title: "Products", path: "/products" },
+    ];
     return (
       <div className="flex justify-around bg-secondary m-3">
-        <Link to="/users">
-          <button
-            onClick={() => {
-              setCurrentPage(1);
-              setSelectedFilter(undefined);
-              setActiveFilter(null);
-            }}
-            className="py-[10px] px-[20px] text-[16px] cursor-pointer border-0 bg-secondary text-black rounded-[4px] transition-colors duration-300 font-neutra hover:bg-primary hover:text-white hover:rounded-[16px] m-3"
-          >
-            Users
-          </button>
-        </Link>
-        <Link to="/products">
-          <button
-            onClick={() => {
-              setCurrentPage(1);
-              setSelectedFilter(undefined);
-            }}
-            className="py-[10px] px-[20px] text-[16px] cursor-pointer border-0 bg-secondary text-black rounded-[4px] transition-colors duration-300 font-neutra hover:bg-primary hover:text-white hover:rounded-[16px] m-3"
-          >
-            Products
-          </button>
-        </Link>
+        {buttons.map((button) => (
+          <Link to={button.path}>
+            <button
+              onClick={() => {
+                setCurrentPage(1);
+                setSelectedFilter(undefined);
+                if (button.notActive) {
+                  setActiveFilter(null);
+                }
+              }}
+              className="py-[10px] px-[20px] text-[16px] cursor-pointer border-0 bg-secondary text-black rounded-[4px] transition-colors duration-300 font-neutra hover:bg-primary hover:text-white hover:rounded-[16px] m-3"
+            >
+              {button.title}
+            </button>
+          </Link>
+        ))}
       </div>
     );
   };
 
   // Filter, Search, and Page Size (All on One Line)
   const renderFilterSection = () => {
+    const options = [5, 10, 20, 50];
     return (
       <>
         <div className="flex flex-wrap items-center gap-4 mt-4 p-8">
@@ -294,10 +294,11 @@ function DataTable<T extends { [key: string]: any }>({
               value={pageSize}
               onChange={handlePageSizeChange}
             >
-              <option value={5}>5</option>
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
+              {options.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
             </select>
             <span>Entries</span>
           </div>
@@ -374,7 +375,7 @@ function DataTable<T extends { [key: string]: any }>({
               {columns.map((column) => (
                 <th
                   key={String(column.header)}
-                  className="border border-[#ebebeb] p-2 text-left bg-secondary"
+                  className="border border-light p-2 text-left bg-secondary"
                 >
                   {column.header}
                 </th>
@@ -383,11 +384,11 @@ function DataTable<T extends { [key: string]: any }>({
           </thead>
           <tbody>
             {filteredData.map((row, rowIndex) => (
-              <tr key={rowIndex} className="hover:bg-[rgb(243,239,239)]">
+              <tr key={rowIndex} className="hover:bg-hoverRow">
                 {columns.map((column) => (
                   <td
                     key={String(column.header)}
-                    className="border border-[#ebebeb] p-2 text-left"
+                    className="border border-light p-2 text-left"
                   >
                     {String(row[column.accessor])}
                   </td>
@@ -416,7 +417,7 @@ function DataTable<T extends { [key: string]: any }>({
             key={index}
             onClick={() => setCurrentPage(number)}
             disabled={number === "..."}
-            className={`mx-[5px] py-[5px] px-[10px] border-0 cursor-pointer rounded-[16px] transition-colors duration-300 transition-transform
+            className={`mx-[5px] py-[5px] px-[10px] border-0 cursor-pointer rounded-[16px] duration-300 transition-transform
               ${
                 number === currentPage
                   ? "bg-primary text-white"

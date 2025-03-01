@@ -1,14 +1,13 @@
-// src/redux/slices/productSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Product } from "../../utils/interface";
+import { IProduct } from "../../utils/interface";
 
-interface ProductState {
-  products: Product[];
+interface IProductState {
+  products: IProduct[];
   totalProducts: number;
   productPageSize: number;
 }
 
-const initialState: ProductState = {
+const initialState: IProductState = {
   products: [],
   totalProducts: 0,
   productPageSize: 5,
@@ -18,7 +17,7 @@ const productSlice = createSlice({
   name: "products",
   initialState,
   reducers: {
-    setProducts: (state, action: PayloadAction<Product[]>) => {
+    setProducts: (state, action: PayloadAction<IProduct[]>) => {
       state.products = action.payload;
     },
     setTotalProducts: (state, action: PayloadAction<number>) => {
@@ -30,5 +29,6 @@ const productSlice = createSlice({
   },
 });
 
-export const { setProducts, setTotalProducts, setProductPageSize } = productSlice.actions;
+export const { setProducts, setTotalProducts, setProductPageSize } =
+  productSlice.actions;
 export default productSlice.reducer;

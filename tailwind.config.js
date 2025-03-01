@@ -10,7 +10,7 @@ module.exports = {
         primary: "#fdc936",  
         secondary: "#c0e3e5", 
         light: "#ebebeb",    
-        hoverRow: "rgb(243,239,239)", 
+        hoverRow: "rgb(243,239,239)",
       },
       borderWidth: {
       },

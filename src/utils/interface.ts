@@ -5,7 +5,7 @@ export interface IFilterKeys {
   dropdownValues?: string[];
 }
 
-export interface User {
+export interface IUser {
   id: number;
   firstName: string;
   lastName: string;
@@ -22,7 +22,7 @@ export interface User {
   eyeColor: string;
 }
 
-export interface Product {
+export interface IProduct {
   id: number;
   title: string;
   brand: string;

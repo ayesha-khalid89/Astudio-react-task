@@ -1,18 +1,23 @@
-// src/pages/Products.tsx
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DataTable from "../components/DataTable";
 import { RootState } from "../redux/store";
-import { setProducts, setTotalProducts, setProductPageSize } from "../redux/slices/productSlice";
-import { Product } from "../utils/interface";
+import {
+  setProducts,
+  setTotalProducts,
+  setProductPageSize,
+} from "../redux/slices/productSlice";
+import { IProduct } from "../utils/interface";
 import { IFilterKeys } from "../utils/interface";
+import { API_URLS, DATA_TYPES } from "../constants/global";
 
 const Products: React.FC = () => {
   const dispatch = useDispatch();
-  const { products, totalProducts, productPageSize } = useSelector((state: RootState) => state.products);
+  const { products, totalProducts, productPageSize } = useSelector(
+    (state: RootState) => state.products
+  );
 
-
-  const columns: { header: string; accessor: keyof Product }[] = [
+  const columns: { header: string; accessor: keyof IProduct }[] = [
     { header: "ID", accessor: "id" },
     { header: "Title", accessor: "title" },
     { header: "Brand", accessor: "brand" },
@@ -40,10 +45,10 @@ const Products: React.FC = () => {
 
   return (
     <div>
-      <DataTable<Product>
+      <DataTable<IProduct>
         columns={columns}
-        fetchUrl="https://dummyjson.com/products"
-        dataType="products"
+        fetchUrl={API_URLS.PRODUCTS}
+        dataType={DATA_TYPES.PRODUCTS}
         setData={(data) => dispatch(setProducts(data))}
         data={products}
         setTotalData={(total) => dispatch(setTotalProducts(total))}

@@ -1,18 +1,23 @@
-// src/pages/Users.tsx
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DataTable from "../components/DataTable";
 import { RootState } from "../redux/store";
-import { setUsers, setTotalUsers, setUserPageSize } from "../redux/slices/userSlice";
-import { User } from "../utils/interface";
+import {
+  setUsers,
+  setTotalUsers,
+  setUserPageSize,
+} from "../redux/slices/userSlice";
+import { IUser } from "../utils/interface";
 import { IFilterKeys } from "../utils/interface";
+import { API_URLS, DATA_TYPES } from "../constants/global";
 
 const Users: React.FC = () => {
   const dispatch = useDispatch();
-  const { users, totalUsers, userPageSize } = useSelector((state: RootState) => state.users);
+  const { users, totalUsers, userPageSize } = useSelector(
+    (state: RootState) => state.users
+  );
 
-
-  const columns: { header: string; accessor: keyof User }[] = [
+  const columns: { header: string; accessor: keyof IUser }[] = [
     { header: "ID", accessor: "id" },
     { header: "First Name", accessor: "firstName" },
     { header: "Last Name", accessor: "lastName" },
@@ -41,17 +46,17 @@ const Users: React.FC = () => {
 
   return (
     <div>
-      <DataTable<User>
+      <DataTable<IUser>
         columns={columns}
-        fetchUrl="https://dummyjson.com/users"
-        dataType="users"
-        setData={(data: User[]) => dispatch(setUsers(data))} 
+        fetchUrl={API_URLS.USERS}
+        dataType={DATA_TYPES.USERS}
+        setData={(data: IUser[]) => dispatch(setUsers(data))}
         data={users}
-        setTotalData={(total: number) => dispatch(setTotalUsers(total))} 
+        setTotalData={(total: number) => dispatch(setTotalUsers(total))}
         totalData={totalUsers}
         filterKeys={filterKeys}
         pageSize={userPageSize}
-        setPageSize={(size: number) => dispatch(setUserPageSize(size))} 
+        setPageSize={(size: number) => dispatch(setUserPageSize(size))}
       />
     </div>
   );

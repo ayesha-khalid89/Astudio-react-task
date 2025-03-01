@@ -1,14 +1,13 @@
-// src/redux/slices/userSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "../../utils/interface";
+import { IUser } from "../../utils/interface";
 
-interface UserState {
-  users: User[];
+interface IUserState {
+  users: IUser[];
   totalUsers: number;
   userPageSize: number;
 }
 
-const initialState: UserState = {
+const initialState: IUserState = {
   users: [],
   totalUsers: 0,
   userPageSize: 5,
@@ -18,7 +17,7 @@ const userSlice = createSlice({
   name: "users",
   initialState,
   reducers: {
-    setUsers: (state, action: PayloadAction<User[]>) => {
+    setUsers: (state, action: PayloadAction<IUser[]>) => {
       state.users = action.payload;
     },
     setTotalUsers: (state, action: PayloadAction<number>) => {
