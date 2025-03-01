@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* src/index.css */
+
+/* Import Neutra Text font */
+@import url("https://fonts.googleapis.com/css2?family=Neutra+Text:wght@400;700&display=swap");
